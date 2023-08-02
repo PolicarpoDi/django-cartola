@@ -50,7 +50,28 @@ class Match(models.Model):
     class Meta:
         verbose_name = 'Jogo'
         verbose_name_plural = 'Jogos'
+        
+        
+class Action(models.Model):
+    player = models.ForeignKey(Player, on_delete=models.PROTECT, verbose_name='Jogador')
+    team = models.ForeignKey(Team, on_delete=models.PROTECT, verbose_name='Time')
+    minutos    = models.IntegerField(verbose_name='Minutos')
+    match = models.ForeignKey(Match, on_delete=models.PROTECT, verbose_name='Jogo')
     
+    class Actions(models.TextChoices):
+        GOAL = 'goal', 'Gol',
+        ASSIST = 'assist', 'Assistência',
+        YELLOW_CARD = 'yellow card', 'Cartão amarelo',
+        RED_CARD = 'red card', 'Cartão vermelho'
+         
+    action = models.CharField(max_length=50, choices=Actions.choices, verbose_name='Ação')
+    
+    def __str__(self):
+        return f'{self.player} - {self.action}'
+    
+    class Meta:
+        verbose_name = 'Ação do jogo'
+        verbose_name_plural ='Ações do jogo'
     
 ## SQL
 # create table matc (mach_date datetime, team_a_id int) ON delete
